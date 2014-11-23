@@ -10,13 +10,15 @@ import android.app.Activity;
 import android.content.Intent;
 
 public class PhoneGapLua extends CordovaPlugin {
-    public static final String ACTION_RUN = "run";
+    public static final String ACTION_INITIALIZE = "_lua_initialize";
+    public static final String ACTION_CLOSE = "_lua_close";
+    public static final String ACTION_INJECT = "_lua_inject";
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
 	    JSONObject arg_object = args.getJSONObject(0);
-            if (ACTION_RUN.equals(action)) {
+            if (ACTION_INITIALIZE.equals(action)) {
                 
                 /*Intent calIntent = new Intent(Intent.ACTION_EDIT)
                     .setType("vnd.android.cursor.item/event")
