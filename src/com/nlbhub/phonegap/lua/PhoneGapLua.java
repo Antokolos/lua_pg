@@ -12,6 +12,7 @@ import android.content.Intent;
 public class PhoneGapLua extends CordovaPlugin {
     public static final String ACTION_INITIALIZE = "_lua_initialize";
     public static final String ACTION_CLOSE = "_lua_close";
+    public static final String ACTION_EXEC = "_lua_exec";
     public static final String ACTION_INJECT = "_lua_inject";
     
     @Override
@@ -31,6 +32,15 @@ public class PhoneGapLua extends CordovaPlugin {
                this.cordova.getActivity().startActivity(calIntent);*/
                callbackContext.success();
                return true;
+            } else if (ACTION_CLOSE.equals(action)) {
+                callbackContext.success();
+                return true;
+            } else if (ACTION_INJECT.equals(action)) {
+                callbackContext.success();
+                return true;
+            } else if (ACTION_EXEC.equals(action)) {
+                callbackContext.success(new JSONArray());
+                return true;
             }
             callbackContext.error("Invalid action");
             return false;
