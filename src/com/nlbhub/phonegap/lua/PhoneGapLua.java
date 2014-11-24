@@ -8,13 +8,21 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
+import java.io.StringReader;
 
 public class PhoneGapLua extends CordovaPlugin {
     public static final String ACTION_INITIALIZE = "_lua_initialize";
     public static final String ACTION_CLOSE = "_lua_close";
     public static final String ACTION_EXEC = "_lua_exec";
     public static final String ACTION_INJECT = "_lua_inject";
-    
+    private static final PhoneGapLua SINGLETON = new PhoneGapLua();
+    private Globals m_globals = null;
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         try {
@@ -30,16 +38,27 @@ public class PhoneGapLua extends CordovaPlugin {
                     .putExtra("eventLocation", arg_object.getString("eventLocation"));
              
                this.cordova.getActivity().startActivity(calIntent);*/
-               callbackContext.success();
-               return true;
+                SINGLETON.initialize();
+                callbackContext.success();
+                return true;
             } else if (ACTION_CLOSE.equals(action)) {
+                SINGLETON.close();
                 callbackContext.success();
                 return true;
             } else if (ACTION_INJECT.equals(action)) {
                 callbackContext.success();
                 return true;
             } else if (ACTION_EXEC.equals(action)) {
-                callbackContext.success(new JSONArray());
+                String command = arg_object.getString("command");
+                String source_name = arg_object.getString("source_name");
+                LuaValue chunk = m_globals.load(new StringReader(command), source_name);
+                Varargs varargs = chunk.invoke();
+                JSONArray result = new JSONArray();
+                int nargs = varargs.narg();
+                for (int i = 1; i <= nargs; i++) {
+                    result.put(varargs.arg(i).toString());
+                }
+                callbackContext.success(result);
                 return true;
             }
             callbackContext.error("Invalid action");
@@ -49,5 +68,13 @@ public class PhoneGapLua extends CordovaPlugin {
             callbackContext.error(e.getMessage());
             return false;
         } 
+    }
+
+    private void close() {
+        // TODO: implement ???
+    }
+
+    private void initialize() {
+        m_globals = JsePlatform.standardGlobals();
     }
 }
