@@ -5,7 +5,7 @@
       version="0.1.0">
     <name>PhoneGapLua</name>
     <description>PhoneGap Lua Plugin</description>
-    <license>BSD</license>
+    <license>MIT</license>
     <keywords>phonegap,lua</keywords>
 
 
@@ -21,6 +21,8 @@
             </feature>
         </config-file>
 
+        <source-file src="libs/cordova-3.6.3.jar" target-dir="libs" framework="true" />
+        <source-file src="libs/luaj-jse-3.0.jar" target-dir="libs" framework="true" />
         <source-file src="src/com/nlbhub/phonegap/lua/PhoneGapLua.java" target-dir="src/com/nlbhub/phonegap/lua" />
      </platform>
 </plugin>
