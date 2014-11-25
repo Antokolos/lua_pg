@@ -56,7 +56,7 @@ public class PhoneGapLua extends CordovaPlugin {
                 JSONArray result = new JSONArray();
                 int nargs = varargs.narg();
                 for (int i = 1; i <= nargs; i++) {
-                    result.put(varargs.arg(i).toString());
+                    result.put(i - 1, varargs.arg(i).toString());
                 }
                 callbackContext.success(result);
                 return true;

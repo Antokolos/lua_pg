@@ -17,14 +17,14 @@ var Lua = {
     },
     stdout: function (str) {console.log("stdout: " +str)},
     stderr: function (str) {console.log("stderr: " +str)},
-    eval: function (command, source_name, source) {
+    eval: function (successCallback, errorCallback, command, source_name, source) {
         source_name = source_name || this.default_source_name;
         source      = source      || command;
-        return this.exec("return " + command, source_name, source);
+        return this.exec(successCallback, errorCallback, "return " + command, source_name, source);
     },
-    exec: function (command, source_name, source) {
+    exec: function (successCallback, errorCallback, command, source_name, source) {
         if (!this.isInitialized) throw new Error('Lua is not initialized');
-        return this._lua_exec(command, source_name, source);
+        _lua_exec(successCallback, errorCallback, command, source_name, source);
     },
     anon_lua_object: function (object) {
         // Create anonymous Lua object or literal from JS object
@@ -84,11 +84,10 @@ Lua._lua_close = function() {
     );
     return null;
 };
-Lua._lua_exec = function(command, source_name, source) {
-    var result = null;
+Lua._lua_exec = function(successCallback, errorCallback, command, source_name, source) {
     cordova.exec(
-        function(stackArgs) { result = stackArgs; }, // success callback function
-        function() {}, // error callback function
+        successCallback, // success callback function
+        errorCallback, // error callback function
         'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
         '_lua_exec', // with this action name
         [{                  // and this array of custom arguments to create our entry
@@ -97,7 +96,7 @@ Lua._lua_exec = function(command, source_name, source) {
             "source": source
         }]
     );
-    return result;
+    return null;
 };
 Lua._lua_inject = function(object, name, metatable) {
     cordova.exec(
