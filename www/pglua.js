@@ -54,63 +54,63 @@ var Lua = {
             this.cache['items'][evalstring] = this.eval(evalstring)
         }
         return this.cache['items'][evalstring];
+    },
+    get_tmp_name: function() { return "_weblua_tmp_" + this.tmp_id++; },
+    _lua_initialize: function() {
+        cordova.exec(
+            function() {}, // success callback function
+            function() {}, // error callback function
+            'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
+            '_lua_initialize', // with this action name
+            [{                  // and this array of custom arguments to create our entry
+
+            }]
+        );
+        return null;
+    },
+    _lua_close: function() {
+        cordova.exec(
+            function() {}, // success callback function
+            function() {}, // error callback function
+            'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
+            '_lua_close', // with this action name
+            [{                  // and this array of custom arguments to create our entry
+
+            }]
+        );
+        return null;
+    },
+    _lua_exec: function(successCallback, errorCallback, command, source_name, source) {
+        cordova.exec(
+            successCallback, // success callback function
+            errorCallback, // error callback function
+            'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
+            '_lua_exec', // with this action name
+            [{                  // and this array of custom arguments to create our entry
+                "command": command,
+                "source_name": source_name,
+                "source": source
+            }]
+        );
+        return null;
+    },
+    _lua_inject: function(object, name, metatable) {
+        cordova.exec(
+            function() {}, // success callback function
+            function() {}, // error callback function
+            'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
+            '_lua_inject', // with this action name
+            [{                  // and this array of custom arguments to create our entry
+                "object": object,
+                "name": name,
+                "metatable": metatable
+            }]
+        );
+        return null;
     }
 }
 
 Lua.cache['items'] = {};
 Lua.cache['clear'] = function (evalstring) { delete Lua.cache['items'][evalstring] };
-Lua.get_tmp_name = function() { return "_weblua_tmp_" + this.tmp_id++; };
-Lua._lua_initialize = function() {
-    cordova.exec(
-        function() {}, // success callback function
-        function() {}, // error callback function
-        'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
-        '_lua_initialize', // with this action name
-        [{                  // and this array of custom arguments to create our entry
-
-        }]
-    );
-    return null;
-};
-Lua._lua_close = function() {
-    cordova.exec(
-        function() {}, // success callback function
-        function() {}, // error callback function
-        'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
-        '_lua_close', // with this action name
-        [{                  // and this array of custom arguments to create our entry
-
-        }]
-    );
-    return null;
-};
-Lua._lua_exec = function(successCallback, errorCallback, command, source_name, source) {
-    cordova.exec(
-        successCallback, // success callback function
-        errorCallback, // error callback function
-        'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
-        '_lua_exec', // with this action name
-        [{                  // and this array of custom arguments to create our entry
-            "command": command,
-            "source_name": source_name,
-            "source": source
-        }]
-    );
-    return null;
-};
-Lua._lua_inject = function(object, name, metatable) {
-    cordova.exec(
-        function() {}, // success callback function
-        function() {}, // error callback function
-        'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
-        '_lua_inject', // with this action name
-        [{                  // and this array of custom arguments to create our entry
-            "object": object,
-            "name": name,
-            "metatable": metatable
-        }]
-    );
-    return null;
-};
 
 module.exports = Lua;
