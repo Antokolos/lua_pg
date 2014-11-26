@@ -57,7 +57,7 @@ var Lua = function() {
         return this.cache['items'][evalstring];
     };
     this.get_tmp_name = function() { return "_weblua_tmp_" + this.tmp_id++; };
-    function _lua_initialize() {
+    this._lua_initialize = function() {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -69,7 +69,7 @@ var Lua = function() {
         );
         return null;
     };
-    function _lua_close() {
+    this._lua_close = function() {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -81,7 +81,7 @@ var Lua = function() {
         );
         return null;
     };
-    function _lua_exec(successCallback, errorCallback, command, source_name, source) {
+    this._lua_exec = function(successCallback, errorCallback, command, source_name, source) {
         cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
@@ -95,7 +95,7 @@ var Lua = function() {
         );
         return null;
     };
-    function _lua_inject(object, name, metatable) {
+    this._lua_inject = function(object, name, metatable) {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -109,9 +109,8 @@ var Lua = function() {
         );
         return null;
     };
-}
-
-Lua.cache['items'] = {};
-Lua.cache['clear'] = function (evalstring) { delete Lua.cache['items'][evalstring] };
+    this.cache['items'] = {};
+    this.cache['clear'] = function (evalstring) { delete Lua.cache['items'][evalstring] };
+};
 
 module.exports = Lua;
