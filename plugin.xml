@@ -22,6 +22,6 @@
         </config-file>
 
         <source-file src="libs/luaj-jse-3.0.jar" target-dir="libs" framework="true" />
-        <source-file src="src/com/nlbhub/phonegap/lua/PhoneGapLua.java" target-dir="src/com/nlbhub/phonegap/lua" />
+        <source-file src="src/android/com/nlbhub/phonegap/lua/PhoneGapLua.java" target-dir="src/com/nlbhub/phonegap/lua" />
      </platform>
 </plugin>
