@@ -1,32 +1,33 @@
-var Lua = {
-    isInitialized: false,
-    tmp_id: 0,
-    default_source_name: 'stdin',
-    initialize: function (source_name, stdout, stderr) {
+var Lua = function() {
+    var isInitialized = false;
+    var tmp_id = 0;
+    var default_source_name = 'stdin';
+
+    this.initialize = function (source_name, stdout, stderr) {
         if (this.isInitialized) throw new Error('Lua already initialized');
         this.default_source_name = source_name || this.default_source_name;
         this.stdout = stdout || this.stdout;
         this.stderr = stderr || this.stderr;
         this._lua_initialize();
         this.isInitialized = true;
-    },
-    destroy: function() {
+    };
+    this.destroy = function() {
         if (!this.isInitialized) throw new Error('Lua is not initialized');
         this._lua_close();
         this.isInitialized = false;
-    },
-    stdout: function (str) {console.log("stdout: " +str)},
-    stderr: function (str) {console.log("stderr: " +str)},
-    eval: function (successCallback, errorCallback, command, source_name, source) {
+    };
+    this.stdout = function (str) {console.log("stdout: " +str)};
+    this.stderr = function (str) {console.log("stderr: " +str)};
+    this.eval = function (successCallback, errorCallback, command, source_name, source) {
         source_name = source_name || this.default_source_name;
         source      = source      || command;
-        return this.exec(successCallback, errorCallback, "return " + command, source_name, source);
-    },
-    exec: function (successCallback, errorCallback, command, source_name, source) {
+        this.exec(successCallback, errorCallback, "return " + command, source_name, source);
+    };
+    this.exec = function (successCallback, errorCallback, command, source_name, source) {
         if (!this.isInitialized) throw new Error('Lua is not initialized');
-        _lua_exec(successCallback, errorCallback, command, source_name, source);
-    },
-    anon_lua_object: function (object) {
+        this._lua_exec(successCallback, errorCallback, command, source_name, source);
+    };
+    this.anon_lua_object = function (object) {
         // Create anonymous Lua object or literal from JS object
         if (object == undefined || object == null) {
             return "nil";
@@ -40,23 +41,23 @@ var Lua = {
             default:
                 return object.toString();
         }
-    },
-    inject: function (object, name, final_location, metatable) {
+    };
+    this.inject = function (object, name, final_location, metatable) {
         name = name || this.get_tmp_name();
         this._lua_inject(object, name, metatable);
         if (final_location) {
             this.exec(final_location + " = " + name + "\n" + name + " = nil");
         }
         return (final_location || name);
-    },
-    cache: function (evalstring) {
+    };
+    this.cache = function (evalstring) {
         if (!(evalstring in this.cache['items'])) {
             this.cache['items'][evalstring] = this.eval(evalstring)
         }
         return this.cache['items'][evalstring];
-    },
-    get_tmp_name: function() { return "_weblua_tmp_" + this.tmp_id++; },
-    _lua_initialize: function() {
+    };
+    this.get_tmp_name = function() { return "_weblua_tmp_" + this.tmp_id++; };
+    function _lua_initialize() {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -67,8 +68,8 @@ var Lua = {
             }]
         );
         return null;
-    },
-    _lua_close: function() {
+    };
+    function _lua_close() {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -79,8 +80,8 @@ var Lua = {
             }]
         );
         return null;
-    },
-    _lua_exec: function(successCallback, errorCallback, command, source_name, source) {
+    };
+    function _lua_exec(successCallback, errorCallback, command, source_name, source) {
         cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
@@ -93,8 +94,8 @@ var Lua = {
             }]
         );
         return null;
-    },
-    _lua_inject: function(object, name, metatable) {
+    };
+    function _lua_inject(object, name, metatable) {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -107,7 +108,7 @@ var Lua = {
             }]
         );
         return null;
-    }
+    };
 }
 
 Lua.cache['items'] = {};
