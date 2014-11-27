@@ -59,7 +59,7 @@ var Lua = function() {
     };
     this.get_tmp_name = function() { return "_weblua_tmp_" + self.tmp_id++; };
     this._lua_initialize = function() {
-        /*cordova.exec(
+        cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
             'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
@@ -67,11 +67,11 @@ var Lua = function() {
             [{                  // and this array of custom arguments to create our entry
 
             }]
-        );*/
+        );
         return null;
     };
     this._lua_close = function() {
-        /*cordova.exec(
+        cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
             'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
@@ -79,12 +79,11 @@ var Lua = function() {
             [{                  // and this array of custom arguments to create our entry
 
             }]
-        );*/
+        );
         return null;
     };
     this._lua_exec = function(successCallback, errorCallback, command, source_name, source) {
-        successCallback('success!!!');
-        /*cordova.exec(
+        cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
             'PhoneGapLua', // mapped to our native Java class called "CalendarPlugin"
@@ -94,7 +93,7 @@ var Lua = function() {
                 "source_name": source_name,
                 "source": source
             }]
-        );*/
+        );
         return null;
     };
     this._lua_inject = function(object, name, metatable) {
