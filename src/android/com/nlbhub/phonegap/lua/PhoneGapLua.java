@@ -38,11 +38,11 @@ public class PhoneGapLua extends CordovaPlugin {
                     .putExtra("eventLocation", arg_object.getString("eventLocation"));
              
                this.cordova.getActivity().startActivity(calIntent);*/
-                ///SINGLETON.initialize();
+                SINGLETON.initialize();
                 callbackContext.success();
                 return true;
             } else if (ACTION_CLOSE.equals(action)) {
-                ///SINGLETON.close();
+                SINGLETON.close();
                 callbackContext.success();
                 return true;
             } else if (ACTION_INJECT.equals(action)) {
@@ -51,14 +51,14 @@ public class PhoneGapLua extends CordovaPlugin {
             } else if (ACTION_EXEC.equals(action)) {
                 String command = arg_object.getString("command");
                 String source_name = arg_object.getString("source_name");
-                /*LuaValue chunk = m_globals.load(new StringReader(command), source_name);
+                LuaValue chunk = SINGLETON.getGlobals().load(new StringReader(command), source_name);
                 Varargs varargs = chunk.invoke();
                 JSONArray result = new JSONArray();
                 int nargs = varargs.narg();
                 for (int i = 1; i <= nargs; i++) {
                     result.put(i - 1, varargs.arg(i).toString());
-                }*/
-                callbackContext.success(source_name);
+                }
+                callbackContext.success(result);
                 return true;
             }
             callbackContext.error("Invalid action");
@@ -76,5 +76,9 @@ public class PhoneGapLua extends CordovaPlugin {
 
     private void initialize() {
         m_globals = JsePlatform.standardGlobals();
+    }
+
+    private Globals getGlobals() {
+        return m_globals;
     }
 }
