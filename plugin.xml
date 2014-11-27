@@ -10,7 +10,7 @@
 
 
     <js-module src="www/pglua.js" name="PhoneGapLua">
-        <clobbers target="lua" />
+        <clobbers target="Lua" />
     </js-module>
 
     <!-- android -->
