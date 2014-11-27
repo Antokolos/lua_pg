@@ -83,6 +83,7 @@ var Lua = function() {
         return null;
     };
     this._lua_exec = function(successCallback, errorCallback, command, source_name, source) {
+        successCallback('success!!!');
         /*cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
