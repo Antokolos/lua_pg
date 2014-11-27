@@ -115,4 +115,5 @@ var Lua = function() {
     this.cache['clear'] = function (evalstring) { delete Lua.cache['items'][evalstring] };
 };
 
-module.exports = Lua;
+var lua = new Lua();
+module.exports = lua;
