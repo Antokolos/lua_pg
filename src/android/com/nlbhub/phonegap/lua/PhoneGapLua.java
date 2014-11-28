@@ -2,13 +2,12 @@ package com.nlbhub.phonegap.lua;
  
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
+import org.luaj.vm2.*;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.StringReader;
@@ -20,6 +19,7 @@ public class PhoneGapLua extends CordovaPlugin {
     public static final String ACTION_INJECT = "_lua_inject";
     private static final PhoneGapLua SINGLETON = new PhoneGapLua();
     private Globals m_globals = null;
+    private CallbackContext m_injectCallbackContext = null;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -34,7 +34,13 @@ public class PhoneGapLua extends CordovaPlugin {
                 callbackContext.success();
                 return true;
             } else if (ACTION_INJECT.equals(action)) {
-                callbackContext.success();
+                String object = arg_object.getString("object");
+                String name = arg_object.getString("name");
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+                SINGLETON.inject(callbackContext);
+                SINGLETON.getGlobals().get("require").call(LuaValue.valueOf("caller"));
                 return true;
             } else if (ACTION_EXEC.equals(action)) {
                 String command = arg_object.getString("command");
@@ -58,6 +64,10 @@ public class PhoneGapLua extends CordovaPlugin {
         } 
     }
 
+    public static PhoneGapLua getSingleton() {
+        return SINGLETON;
+    }
+
     private void close() {
         // TODO: implement ???
     }
@@ -66,7 +76,15 @@ public class PhoneGapLua extends CordovaPlugin {
         m_globals = JsePlatform.standardGlobals();
     }
 
+    private void inject(CallbackContext callbackContext) {
+        m_injectCallbackContext = callbackContext;
+    }
+
     private Globals getGlobals() {
         return m_globals;
+    }
+
+    CallbackContext getInjectCallbackContext() {
+        return m_injectCallbackContext;
     }
 }

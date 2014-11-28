@@ -49,7 +49,7 @@ var LuaVM = function() {
         return null;
     };
 
-    var _lua_inject = function(object, name, metatable) {
+    var _lua_inject = function(successCallback, errorCallback, object, name, metatable) {
         cordova.exec(
             function() {}, // success callback function
             function() {}, // error callback function
@@ -94,9 +94,9 @@ var LuaVM = function() {
         _lua_exec(successCallback, errorCallback, command, source_name, source);
     };
 
-    this.inject = function (object, name, final_location, metatable) {
+    this.inject = function (successCallback, errorCallback, object, name, final_location, metatable) {
         name = name || _get_tmp_name();
-        _lua_inject(object, name, metatable);
+        _lua_inject(successCallback, errorCallback, object, name, metatable);
         if (final_location) {
             self.exec(final_location + " = " + name + "\n" + name + " = nil");
         }
